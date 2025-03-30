@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="styles.css" />
+    <title>Gnosis CTF</title>
+  </head>
+  <body>
+    <div class="center fullwidth">
+      <h1>Gnosis Society Super Secret</h1>
+      <div class="card center">
+        <input id="password" type="password" placeholder="Enter password" />
+        <p id="message"></p>
+        <button id="check" type="button">Check Password</button>
+      </div>
+    </div>
+  </body>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-app.js";
+    import {
+      getDatabase,
+      ref,
+      set,
+      get,
+      child,
+    } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCTYk9XLdH65MCqRoxirSI7aBw08Tjg3Es",
+      authDomain: "gnosisctf.firebaseapp.com",
+      projectId: "gnosisctf",
+      storageBucket: "gnosisctf.firebasestorage.app",
+      messagingSenderId: "841108247167",
+      appId: "1:841108247167:web:c7ea042a3510c3de77e54a",
+      databaseURL:
+        "https://gnosisctf-default-rtdb.asia-southeast1.firebasedatabase.app",
+    };
+    const app = initializeApp(firebaseConfig);
+
+    async function checkPassword() {
+      const db = getDatabase(app);
+      const reference = ref(db);
+      const passwordRef = child(reference, "password");
+      const flagRef = child(reference, "flag");
+      const flag = await get(flagRef);
+      const password = await get(passwordRef);
+      if (password.exists()) {
+        const actualPassword = password.val();
+        const inputPassword = document.getElementById("password").value;
+        const messageElement = document.getElementById("message");
+        if (inputPassword === actualPassword) {
+          let msg = "Password is correct!";
+          if (flag.exists()) {
+            const flagValue = flag.val();
+            msg = `Password is correct! Flag: ${flagValue}`;
+          }
+          messageElement.textContent = msg;
+          messageElement.style.color = "green";
+        } else {
+          messageElement.textContent = "Password is incorrect!";
+          messageElement.style.color = "red";
+        }
+      }
+    }
+
+    const checkButton = document.getElementById("check");
+    checkButton.addEventListener("click", async () => {
+      const messageElement = document.getElementById("message");
+      messageElement.textContent = "Checking...";
+      messageElement.style.color = "yellow";
+      const password = document.getElementById("password").value;
+      if (password) {
+        await checkPassword();
+      } else {
+        messageElement.textContent = "Please enter a password.";
+        messageElement.style.color = "red";
+      }
+    });
+  </script>
+</html>
