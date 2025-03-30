@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Password Cracker</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        input[type="password"] {
+            padding: 8px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        button {
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        #result {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Password Cracker Challenge</h1>
+
+    <div class="form-group">
+        <label for="password">Enter Password:</label>
+        <input type="password" id="password" name="password">
+    </div>
+
+    <button onclick="checkPassword()">Check Password</button>
+
+    <div id="result"></div>
+
+    <script>
+        // Add some innocent-looking logs that appear as regular debug info
+        console.log("Initializing password verification module...");
+        console.log("Debug mode: disabled");
+        console.log("Session timeout: 3600s");
+        console.log("Loading user preferences...");
+        console.log("Rendering UI components...");
+        console.log("Avengers log: infinity stones located in sector 14");
+        console.log("Setting up security protocols...");
+        
+        function getCorrectPassword() {
+            return fetch(atob("L2dldC1wYXNzd29yZA=="))
+                .then(response => response.text())
+                .then(password => {
+                    return password;
+                })
+                .catch(error => {
+                    console.error('Error fetching password:', error);
+                    return null;
+                });
+        }
+
+        function checkPassword() {
+            const password = document.getElementById('password').value;
+
+            fetch('/check-password', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `password=${encodeURIComponent(password)}`
+            })
+                .then(response => response.text())
+                .then(data => {
+                    const resultDiv = document.getElementById('result');
+                    resultDiv.textContent = data;
+                    resultDiv.style.display = 'block';
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+    </script>
+</body>
+
+</html>
